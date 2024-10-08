@@ -1,15 +1,24 @@
 import { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { addBusiness } from "../redux/action";
-import { LoadScript, GoogleMap, Marker } from "@react-google-maps/api";
 import {
   Button,
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  Paper,
+  TableHead,
   TextField,
   Dialog,
   DialogTitle,
   DialogContent,
 } from "@mui/material";
 import Map from "./Maps"
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Link } from "react-router-dom";
+
 
 class AddBusiness extends Component {
   state = {
@@ -73,7 +82,7 @@ class AddBusiness extends Component {
   render() {
     // const { businessName, description, address, operatingHours, location } =
     //   this.state;
-    const { businessLocation } = this.state;
+    const { businessLocation, businesses } = this.state;
     return (
       <Fragment>
         <div style={{ textAlign: "center" }}>
@@ -137,6 +146,42 @@ class AddBusiness extends Component {
             </DialogContent>
           </Dialog>
         </div>
+
+        <Container maxWidth="lg" className="detail-container">
+        <Paper className="business-paper">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Business Name</TableCell>
+                <TableCell>Business Description</TableCell>
+                <TableCell>Business Address</TableCell>
+                <TableCell>Business Hours</TableCell>
+                <TableCell>Delete</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {this.props.businesses.map((business, id) => (
+                <TableRow key={business.id}>
+                  <TableCell component={Link} to={`/business/${business.id}`}>
+                    {business.id}
+                  </TableCell>
+                  <TableCell>{business["name"]}</TableCell>
+                  <TableCell>{business["description"]}</TableCell>
+                  <TableCell>{business["address"]}</TableCell>
+                  <TableCell>{business["hours"]}</TableCell>
+                  <TableCell>
+                    <DeleteIcon
+                      onClick={() => this.props.deleteListing(id)}
+                      className="icon text-red"
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Paper>
+      </Container>
+
       </Fragment>
     );
   }
